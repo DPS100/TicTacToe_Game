@@ -33,7 +33,7 @@ public class MegaTic extends JPanel implements MouseInputListener, Runnable {
     }
 
     public MegaTic() {
-        frame = new JFrame("Tic Tac Toe");
+        frame = new JFrame("MEGA Tic Tac Toe");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setResizable(false);
         frame.setVisible(true);
@@ -210,15 +210,25 @@ public class MegaTic extends JPanel implements MouseInputListener, Runnable {
         for (int c = 0; c < board.length; c++) {
             for(int r = 0; r < board[c].length; r++) {
                 if(board[c][r] == 1) {
-                    g2d.setColor(Color.BLUE);
+                    g2d.setColor(new Color(0,0,255,3));
                     g2d.fillRect(c * gridSize, r * gridSize, gridSize, gridSize);
                 } else if(board[c][r] == 2) {
-                    g2d.setColor(Color.RED);
+                    g2d.setColor(new Color(255,0,0,3));
                     g2d.fillRect(c * gridSize, r * gridSize, gridSize, gridSize);
                 }
             }
         }
-        
+        for (int x = 0; x <= 2; x++) {
+            for (int y = 0; y <= 2; y++) {
+                if(bigBoard[x][y] == 1) {
+                    g2d.setColor(new Color(0,0,255,1));
+                    g2d.fillRect(x * (gridSize * 3), y * (gridSize * 3), gridSize * 3, gridSize * 3);
+                } else if(bigBoard[x][y] == 2) {
+                    g2d.setColor(new Color(255,0,0,1));
+                    g2d.fillRect(x * (gridSize * 3), y * (gridSize * 3), gridSize * 3, gridSize * 3);
+                }
+            }
+        }
     }
 
     @Override
