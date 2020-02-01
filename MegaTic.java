@@ -70,12 +70,21 @@ public class MegaTic extends JPanel implements MouseInputListener, Runnable {
     }
 
     private void checkGrids() {
-
+        int c;
+        int r;
+        int d;;
         for(int x = 0; x <= 2; x++) {
             for(int y = 0; y <=2 ; y++) {
-                if(checkColumns(x * 3, y * 3, false) != 0) {p1Won = checkColumns(x * 3, y * 3, false);}
-                if(checkRows(x * 3, y * 3, false) != 0) {p1Won = checkRows(x * 3, y * 3, false);}
-                if(checkDiags(x * 3, y * 3, false) != 0) {p1Won = checkDiags(x * 3, y * 3, false);}
+                if(bigBoardOccupied[x][y] == false) {
+                    c = checkColumns(x * 3, y * 3, false);
+                    r = checkRows(x * 3, y * 3, false);
+                    d = checkDiags(x * 3, y * 3, false);
+                    if(c != 0) {bigBoard[x][y] = c; bigBoardOccupied[x][y] = true;}
+                    if(r != 0) {bigBoard[x][y] = r; bigBoardOccupied[x][y] = true;}
+                    if(d != 0) {bigBoard[x][y] = d; bigBoardOccupied[x][y] = true;}
+                } else {
+                    fillBox(x * 3, y * 3);
+                }
             }
         }
 	}
@@ -108,6 +117,14 @@ public class MegaTic extends JPanel implements MouseInputListener, Runnable {
         boolean gameDone = false;
         if(p1Won != 0) {gameDone = true;}
         return gameDone;
+    }
+
+    public void fillBox(int xBox, int yBox) {
+        for(int x = 0; x <= 2; x++) {
+            for(int y = 0; y <= 2; y++) {
+                boardOccupied[x + xBox][y + yBox] = true;
+            }
+        }
     }
 
     public int checkRow(int xBox, int yBox, boolean isLarge){
