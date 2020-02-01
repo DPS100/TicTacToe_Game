@@ -57,8 +57,8 @@ public class MegaTic extends JPanel implements MouseInputListener, Runnable {
             checkGame();
             checkGrids();
             drawBoxes(g2d);
-            drawGames(g2d);
             drawGrids(g2d);
+            drawGames(g2d);
             legalMove(g2d);
             repaint();
         } else {
@@ -90,7 +90,10 @@ public class MegaTic extends JPanel implements MouseInputListener, Runnable {
 	}
  
 	private void checkGame() {
-        
+        if(p1Won == 0) {p1Won = checkColumns(0,0,true);}
+        if(p1Won == 0) {p1Won = checkRows(0,0,true);}
+        if(p1Won == 0) {p1Won = checkDiags(0,0,true);}
+               
 	}
  
 	public void drawGrids(Graphics2D g2d) {
@@ -105,11 +108,14 @@ public class MegaTic extends JPanel implements MouseInputListener, Runnable {
 
     private void drawGames(Graphics2D g2d) {
         g2d.setColor(Color.BLACK);
-        for(int horiz = 0; horiz < height; horiz += gridSize) {
+        for(int horiz = 1; horiz < height; horiz += gridSize * 3) {
             g2d.drawLine(0, horiz, width, horiz);
+            g2d.drawLine(0, horiz+1, width, horiz+1);
+            //g2d.drawLine(0, horiz-1, width, horiz-1);
         }
-        for(int vert = 0; vert < width; vert += gridSize) {
-            g2d.drawLine(vert, 0, vert, height);
+        for(int vert = 1; vert < width; vert += gridSize * 3) {
+            g2d.drawLine(vert+1, 0, vert+1, height);
+            g2d.drawLine(vert-1, 0, vert-1, height);
         }
     }
 
@@ -130,7 +136,8 @@ public class MegaTic extends JPanel implements MouseInputListener, Runnable {
     public int checkRow(int xBox, int yBox, boolean isLarge){
         int[] row = new int[3];
         for(int x = 0; x <= 2; x++) {
-            row[x] = board[xBox + x][yBox];
+            if(!isLarge){row[x] = board[xBox + x][yBox];}
+            else{row[x] = bigBoard[xBox + x][yBox];}
         } if(row[0] == 0) {return 0;} else {
             if(row[0] == row[1] && row[1] == row[2]) {return row[0];}
             else {return 0;}
@@ -150,7 +157,8 @@ public class MegaTic extends JPanel implements MouseInputListener, Runnable {
     public int checkColumn(int xBox, int yBox, boolean isLarge) {
         int[] column = new int[3];
         for(int y = 0; y <= 2; y++) {
-            column[y] = board[xBox][yBox + y];
+            if(!isLarge) {column[y] = board[xBox][yBox + y];}
+            else {column[y] = bigBoard[xBox][yBox + y];}
         } if(column[0] == 0) {return 0;} else {
             if(column[0] == column[1] && column[1] == column[2]) {return column[0];}
             else {return 0;}
@@ -169,12 +177,14 @@ public class MegaTic extends JPanel implements MouseInputListener, Runnable {
     public int checkDiags(int xBox, int yBox, boolean isLarge) {
         int[] slash = new int[3];
         for(int xy = 0; xy <= 2; xy++) {
-            slash[xy] = board[xBox + xy][yBox + xy];
+            if(!isLarge){slash[xy] = board[xBox + xy][yBox + xy];}
+            else {slash[xy] = bigBoard[xBox + xy][yBox + xy];}
         } if (slash[0] != 0) {
             if (slash[0] == slash[1] && slash[1] == slash[2]) {return slash[0];}
         } 
         for(int xyo = 0; xyo <= 2; xyo++) {
-            slash[xyo] = board[xBox + 2 - xyo][yBox + xyo];
+            if(!isLarge){slash[xyo] = board[xBox + 2 - xyo][yBox + xyo];}
+            else{slash[xyo] = bigBoard[xBox + 2 - xyo][yBox + xyo];}
         } if (slash[0] == 0) {return 0;} else {
             if (slash[0] == slash[1] && slash[1] == slash[2]) {return slash[0];}
             else {return 0;}
@@ -182,7 +192,7 @@ public class MegaTic extends JPanel implements MouseInputListener, Runnable {
     }
 
     public void winScreen(Graphics2D g2d) {
-        g2d.setColor(Color.BLACK);
+        g2d.setColor(new Color(0,0,0,200));
         g2d.fillRect(0,0,width,height);
         if (p1Won == 1) {g2d.setColor(Color.BLUE);} else {g2d.setColor(Color.RED);}
         g2d.drawString("Player " + p1Won + " Wins!", width / 2, height / 2);
