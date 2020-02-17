@@ -1,6 +1,7 @@
 import javax.swing.event.MouseInputListener;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JButton;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -27,6 +28,7 @@ public class MegaTic extends JPanel implements MouseInputListener, Runnable {
     public int[][] bigBoard = new int[boxes/3][boxes/3];
     public boolean[][] bigBoardOccupied = new boolean[boxes/3][boxes/3];
     public JFrame frame;
+    public JButton button;
 
     public static void main(String[] args) {
         new MegaTic();
@@ -38,13 +40,16 @@ public class MegaTic extends JPanel implements MouseInputListener, Runnable {
         frame.setResizable(false);
         frame.setVisible(true);
         frame.setContentPane(this);
-        setPreferredSize(new Dimension(width, height));
-        setSize(new Dimension(width, height));
+        setPreferredSize(new Dimension(width + width / 9, height));
+        setSize(new Dimension(width + width / 9, height));
         frame.pack();
         setFocusTraversalKeysEnabled(false);
         frame.setLocationRelativeTo(null);
         addMouseListener(this);
         addMouseMotionListener(this);
+
+        button = new JButton("Restart ");
+        frame.add(button);
     }
 
     public void paintComponent(Graphics g) {
@@ -60,11 +65,29 @@ public class MegaTic extends JPanel implements MouseInputListener, Runnable {
             drawGrids(g2d);
             drawGames(g2d);
             legalMove(g2d);
-            repaint();
         } else {
             winScreen(g2d);
-            repaint();
         }
+        drawMenu(g2d);
+        repaint();
+    }
+
+    private void drawMenu(Graphics2D g2d) {
+        playerTurn(g2d);
+        restartButton(g2d);
+    }
+
+    private void restartButton(Graphics2D g2d) {
+
+    }
+
+    public void playerTurn(Graphics2D g2d) {
+        if(p1Turn) {g2d.setColor(Color.BLUE);}
+        else {g2d.setColor(Color.RED);}
+        g2d.fillRect(width, 15, gridSize, gridSize);
+        g2d.setColor(Color.BLACK);
+        g2d.drawString("Player: ", width, 12);
+        g2d.drawRect(width, 15, gridSize, gridSize);
     }
 
     private void legalMove(Graphics2D g2d) {
@@ -109,14 +132,15 @@ public class MegaTic extends JPanel implements MouseInputListener, Runnable {
 
     private void drawGames(Graphics2D g2d) {
         g2d.setColor(Color.BLACK);
-        for(int horiz = 1; horiz < height; horiz += gridSize * 3) {
+        for(int horiz = 0; horiz <= height; horiz += gridSize * 3) {
             g2d.drawLine(0, horiz, width, horiz);
             g2d.drawLine(0, horiz+1, width, horiz+1);
-            //g2d.drawLine(0, horiz-1, width, horiz-1);
+            g2d.drawLine(0, horiz-1, width, horiz-1);
         }
-        for(int vert = 1; vert < width; vert += gridSize * 3) {
+        for(int vert = 0; vert <= width; vert += gridSize * 3) {
             g2d.drawLine(vert+1, 0, vert+1, height);
             g2d.drawLine(vert-1, 0, vert-1, height);
+            g2d.drawLine(vert, 0, vert, height);
         }
     }
 
@@ -193,7 +217,7 @@ public class MegaTic extends JPanel implements MouseInputListener, Runnable {
     }
 
     public void winScreen(Graphics2D g2d) {
-        g2d.setColor(new Color(0,0,0,2));
+        g2d.setColor(new Color(0,0,0,4));
         g2d.fillRect(0,0,width,height);
         if (p1Won == 1) {g2d.setColor(Color.BLUE);} else {g2d.setColor(Color.RED);}
         g2d.drawString("Player " + p1Won + " Wins!", width / 2, height / 2);
@@ -264,8 +288,8 @@ public class MegaTic extends JPanel implements MouseInputListener, Runnable {
 
     @Override
     public void mouseMoved(MouseEvent e) {
-        x = e.getX() / gridSize;
-        y = e.getY() / gridSize;
+        if(e.getX() < gridSize * 9 && e.getY() < gridSize * 9){x = e.getX() / gridSize;}
+        if(e.getX() < gridSize * 9 && e.getY() < gridSize * 9){y = e.getY() / gridSize;}
     }
 
     public void run() {

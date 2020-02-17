@@ -2,6 +2,20 @@
     "configurations": [
         {
             "type": "java",
+            "name": "CodeLens (Launch) - Dragtest",
+            "request": "launch",
+            "mainClass": "Dragtest",
+            "projectName": "TicTacToe_Game_b152616"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - DragonApp",
+            "request": "launch",
+            "mainClass": "DragonApp",
+            "projectName": "TicTacToe_Game_b152616"
+        },
+        {
+            "type": "java",
             "name": "CodeLens (Launch) - MegaTic",
             "request": "launch",
             "mainClass": "MegaTic",
